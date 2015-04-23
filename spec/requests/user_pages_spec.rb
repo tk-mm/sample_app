@@ -12,7 +12,7 @@ describe "UserPages" do
     it { should have_title(user.name) }
   end                       
 
-  describe "sighup page" do
+  describe "signup page" do
     before { visit signup_path }
 
     it { should have_content('Sigh up') }
@@ -41,6 +41,15 @@ describe "UserPages" do
 
       it "should create a user" do
         expect { click_button submit }.to change(User, :count).by(1)
+      end
+
+      describe "after saving the user" do
+        before { click_button submit }
+        let(:user) { User.find_by(email: 'user@example.com') }
+
+        it { should have_link('Sign out') }
+        it { should have_title(user.name) }
+        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
       end
     end
   end
